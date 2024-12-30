@@ -28,11 +28,12 @@ async def game_by_id(db: Annotated[Session, Depends(get_db)], game_id: int):
         return game
 
 @router.post('/create')
-async def create_game(db: Annotated[Session, Depends(get_db)], create_game: CreateGame, users_id: int):
+async def create_game(db: Annotated[Session, Depends(get_db)], create_game: CreateGame):
     db.execute(insert(Game).values(title=create_game.title,
                                    description=create_game.description,
+                                   age_limited=create_game.age_limited,
+                                   size=create_game.size,
                                    cost=create_game.cost,
-                                   user_id=users_id,
                                    slug=slugify(create_game.title)))
     db.commit()
     return {'status_code': status.HTTP_201_CREATED,
@@ -58,14 +59,14 @@ async def update_game(db: Annotated[Session, Depends(get_db)], game_id: int, upd
          'transaction': 'Games update is successful!'}
 
 @router.delete('/delete')
-async def delete_game(db: Annotated[Session, Depends(get_db)], task_id: int):
-    task = db.scalars(select(Game).where(Game.id == task_id))
+async def delete_game(db: Annotated[Session, Depends(get_db)], game_id: int):
+    task = db.scalars(select(Game).where(Game.id == game_id))
     if task is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail='Games was not found'
         )
-    db.execute(delete(Game).where(Game.id == task_id))
+    db.execute(delete(Game).where(Game.id == game_id))
     db.commit()
 
     return {'status_code': status.HTTP_200_OK,

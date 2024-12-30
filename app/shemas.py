@@ -16,12 +16,12 @@ class CreateGame(BaseModel):
     title: str
     description: str
     cost: float
-    description: float
+    age_limited: bool
     size: float
 
 class UpdateGame(BaseModel):
     title: str
     description: str
     cost: float
-    description: float
+    age_limited: bool
     size: float

@@ -1,7 +1,6 @@
 from backend.db import Base
-from sqlalchemy import Column, ForeignKey, Integer, String, Boolean, Float
+from sqlalchemy import Column, ForeignKey, Integer, String, Boolean, Float, PrimaryKeyConstraint
 from sqlalchemy.orm import relationship
-
 
 
 class User(Base):
@@ -9,12 +8,13 @@ class User(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     username = Column(String)
-    login = Column(String(40), unique=True,index=True)
-    email = Column(String(40), unique=True,index=True)
+    login = Column(String(40), unique=True, index=True)
+    email = Column(String(40), unique=True, index=True)
     password = Column(String)
     age = Column(Integer)
     slug = Column(String, unique=True, index=True)
-    game = relationship('Game', back_populates='user')
+    games = relationship("Game", secondary="gameusers", back_populates='users')
+
 
 class Game(Base):
     __tablename__ = 'games'
@@ -26,4 +26,14 @@ class Game(Base):
     cost = Column(Float)
     size = Column(Float)
     slug = Column(String, unique=True, index=True)
+    users = relationship("User", secondary="gameusers", back_populates='games')
+
+
+class GameUser(Base):
+    __tablename__ = 'gameusers'
+    __table_args__ = (
+        PrimaryKeyConstraint('user_id', 'game_id'),
+    )
+
     user_id = Column(Integer, ForeignKey('users.id'), index=True)
+    game_id = Column(Integer, ForeignKey('games.id'), index=True)
