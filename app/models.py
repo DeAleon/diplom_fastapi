@@ -15,6 +15,9 @@ class User(Base):
     slug = Column(String, unique=True, index=True)
     games = relationship("Game", secondary="gameusers", back_populates='users')
 
+    def __str__(self):
+        return self.login
+
 
 class Game(Base):
     __tablename__ = 'games'
@@ -27,6 +30,9 @@ class Game(Base):
     size = Column(Float)
     slug = Column(String, unique=True, index=True)
     users = relationship("User", secondary="gameusers", back_populates='games')
+
+    def __str__(self):
+        return self.title
 
 
 class GameUser(Base):

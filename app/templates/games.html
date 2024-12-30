@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Игры</title>
+</head>
+<body>
+  <header>
+
+      <h1> Игры </h1>
+
+  </header>
+
+  <nav>
+    {% block navigation %}
+      <p>
+        <a href="/">Главная страница</a>
+      </p>
+      <p>
+        <a href="/game">Игры</a>
+      </p>
+      <p>
+        <a href="/user">Регистрация</a>
+      </p>
+    {% endblock %}
+  </nav>
+  <main class="container-fluid">
+    {% block content %}
+      <div class="card">
+          <ul class="list-group list-group-flush">
+              {% for game in games %}
+              <li class="list-group-item">
+                  {{ game.title }} | {{ game.description }}.Цена: {{ game.cost }}руб.</a>
+              </li>
+              {%endfor%}
+          </ul>
+      </div>
+    {% endblock %}
+  </main>
+
+</body>
+</html>

@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, status, HTTPException
+from fastapi import APIRouter, Depends, status, HTTPException, Request
 from sqlalchemy.orm import Session
 from backend.db import get_db
 from typing import Annotated
@@ -6,15 +6,21 @@ from models import User, Game
 from shemas import CreateUser, UpdateUser, UpdateGame, CreateGame
 from sqlalchemy import insert, select, update, delete
 from slugify import slugify
-
+from fastapi.responses import HTMLResponse
+from fastapi.templating import Jinja2Templates
 
 router = APIRouter(prefix='/game', tags=['game'])
+templates = Jinja2Templates(directory='templates')
 
+@router.post('/')
+async def home(request: Request, db: Annotated[Session, Depends(get_db)]) -> HTMLResponse:
+    game = db.scalars(select(Game)).all()
+    return templates.TemplateResponse('games.html', {'request': request, 'games': game})
 
-@router.get('/')
+@router.get('/all_game')
 async def all_game(db: Annotated[Session, Depends(get_db)]):
-    task = db.scalars(select(Game)).all()
-    return task
+    game = db.scalars(select(Game)).all()
+    return game
 
 @router.get('/game_id')
 async def game_by_id(db: Annotated[Session, Depends(get_db)], game_id: int):
