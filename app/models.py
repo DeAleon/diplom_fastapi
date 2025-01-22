@@ -8,15 +8,14 @@ class User(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     username = Column(String)
-    login = Column(String(40), unique=True, index=True)
     email = Column(String(40), unique=True, index=True)
-    password = Column(String)
+    hashed_password = Column(String)
     age = Column(Integer)
     slug = Column(String, unique=True, index=True)
     games = relationship("Game", secondary="gameusers", back_populates='users')
 
     def __str__(self):
-        return self.login
+        return self.username
 
 
 class Game(Base):

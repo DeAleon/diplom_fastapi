@@ -2,33 +2,46 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Главная страница{% endblock %}</title>
+    <link href="{{ url_for('static', path='/style.css') }}" rel="stylesheet">
 </head>
 <body>
-  <header>
+
+<header>
     {% block header %}
-      <h1 style="text-align: center"> Главная страница </h1>
-    {% endblock %}
-  </header>
+    <h1>Главная страница</h1>
 
-  <nav>
-    {% block navigation %}
-      <p>
-        <a href="/">Главная страница</a>
-      </p>
-      <p>
-        <a href="/game">Игры</a>
-      </p>
-      <p>
-        <a href="/user">Регистрация</a>
-      </p>
     {% endblock %}
-  </nav>
-  <main class="container-fluid">
+    <nav>
+        {% block nav %}
+        <a href="/user/register/">Регистрация</a>
+        <a href="/login/">Войти</a>
+
+        <ul>
+            <li><a href="/">Главная страница</a></li>
+            <li><a href="/game/">Игры</a></li>
+            <li><a href="/cart/">Корзина</a></li>
+
+        </ul>
+        {% endblock %}
+    </nav>
+
+</header>
+<main>
     {% block content %}
-
     {% endblock %}
-  </main>
+</main>
+<div class="container">
+    <footer class="footer">
 
+        {% block footer %}
+        <h2> Дипломная рабата приложение: FastAPI </h2>
+        <p>Cоздание простого веб-приложения.</p>
+        <p>Автор: Олег Никитинский</p>
+        {% endblock %}
+
+    </footer>
+</div>
 </body>
 </html>

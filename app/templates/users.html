@@ -1,10 +1,39 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+<{%extends "main.html" %}
 
-</body>
-</html>
+{% block title %}Регистрация{% endblock %}
+
+{% block header %}<h2>Регистрация</h2>{% endblock %}
+
+{% block nav %}
+{{ super() }}
+{% endblock %}
+
+{% block content %}
+<div align="center">
+    <div align="center" class="border">
+        <form action="" method="post">
+            {% csrf_token %}
+            <label for="username">Логин:</label>
+            <input type="text" id="username" name="username" maxlength="30" required>
+
+            <label for="email">Email:</label>
+            <input type="text" id="email" name="email" minlength="8" required>
+
+            <label for="password">Введите пароль:</label>
+            <input type="text" id="password" name="password" minlength="8" required>
+
+            <label for="repeat_password">Повторите пароль:</label>
+            <input type="text" id="repeat_password" name="repeat_password" minlength="8" required>
+
+            <label for="age">Введите свой возраст:</label>
+            <input type="text" id="age" name="age" maxlength="3" max="120" required>
+
+            <button type="submit">Отправить</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block footer %}
+{{ super() }}
+{% endblock %}

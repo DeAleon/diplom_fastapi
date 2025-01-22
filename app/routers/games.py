@@ -12,7 +12,7 @@ from fastapi.templating import Jinja2Templates
 router = APIRouter(prefix='/game', tags=['game'])
 templates = Jinja2Templates(directory='templates')
 
-@router.post('/')
+@router.get('/')
 async def home(request: Request, db: Annotated[Session, Depends(get_db)]) -> HTMLResponse:
     game = db.scalars(select(Game)).all()
     return templates.TemplateResponse('games.html', {'request': request, 'games': game})

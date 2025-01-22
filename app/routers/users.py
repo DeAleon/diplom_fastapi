@@ -7,23 +7,31 @@ from shemas import CreateUser, UpdateUser
 from sqlalchemy import insert, select, update, delete
 from slugify import slugify
 from fastapi.responses import HTMLResponse
+
 from fastapi.templating import Jinja2Templates
+from utils import get_password_hash
 
 
 router = APIRouter(prefix='/user', tags=['user'])
+
 templates = Jinja2Templates(directory='templates')
 
-@router.post('/')
-async def register_user(request: Request, db: Annotated[Session, Depends(get_db)],
-                        create_user: CreateUser) -> HTMLResponse:
-    reg = db.execute(insert(User).values(username=create_user.username,
-                                   login=create_user.login,
-                                   email=create_user.email,
-                                   age=create_user.age,
-                                   password=create_user.password,
-                                   slug=slugify(create_user.username)))
+
+@router.post("/register/", response_class=HTMLResponse)
+async def register_user(request: Request, username: str, email: str, password: str, age: int, db: Session = Depends(get_db)):
+    existing_user = db.query(User).filter(User.username == username).first()
+    if existing_user:
+        raise HTTPException(status_code=400, detail="Пользователь уже существует")
+
+    hashed_password = get_password_hash(password)
+    new_user = User(username=username, email=email, hashed_password=hashed_password, age=age, slug=slugify(username))
+
+    db.add(new_user)
     db.commit()
-    return templates.TemplateResponse('games.html', {'request': request, 'reg': reg})
+    db.refresh(new_user)
+    return templates.TemplateResponse('users.html', {'request': request})
+
+
 
 @router.get('/all_users')
 async def all_user(db: Annotated[Session, Depends(get_db)]):
@@ -44,10 +52,9 @@ async def user_by_id(db: Annotated[Session, Depends(get_db)], user_id: int):
 @router.post('/create')
 async def create_user(db: Annotated[Session, Depends(get_db)], create_user: CreateUser):
     db.execute(insert(User).values(username=create_user.username,
-                                   login=create_user.login,
                                    email=create_user.email,
                                    age=create_user.age,
-                                   password=create_user.password,
+                                   hashed_password=get_password_hash(create_user.password),
                                    slug=slugify(create_user.username)))
     db.commit()
     return {'status_code': status.HTTP_201_CREATED,
@@ -64,7 +71,7 @@ async def update_user(db: Annotated[Session, Depends(get_db)], user_id: int, upd
 
     db.execute(update(User).where(User.id == user_id).values(
         username=update_user.username,
-        password=update_user.password,
+        hashed_password=get_password_hash(create_user.password),
         age=update_user.age))
 
     db.commit()

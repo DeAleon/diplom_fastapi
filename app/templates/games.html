@@ -5,38 +5,40 @@
     <title>Игры</title>
 </head>
 <body>
-  <header>
+<header>
 
-      <h1> Игры </h1>
+    <h1> Игры </h1>
 
-  </header>
+</header>
 
-  <nav>
+<nav>
     {% block navigation %}
-      <p>
+    <p>
         <a href="/">Главная страница</a>
-      </p>
-      <p>
+    </p>
+    <p>
         <a href="/game">Игры</a>
-      </p>
-      <p>
+    </p>
+    <p>
         <a href="/user">Регистрация</a>
-      </p>
+    </p>
+
     {% endblock %}
-  </nav>
-  <main class="container-fluid">
+</nav>
+<main class="container-fluid">
     {% block content %}
-      <div class="card">
-          <ul class="list-group list-group-flush">
-              {% for game in games %}
-              <li class="list-group-item">
-                  {{ game.title }} | {{ game.description }}.Цена: {{ game.cost }}руб.</a>
-              </li>
-              {%endfor%}
-          </ul>
-      </div>
+    <div class="card">
+        <ul class="list-group list-group-flush">
+            {% for game in games %}
+            <li class="list-group-item">
+                <a>{{ game.title }} | {{ game.description }}.Цена: {{ game.cost }}руб.</a>
+                <button> Купить</button>
+            </li>
+            {%endfor%}
+        </ul>
+    </div>
     {% endblock %}
-  </main>
+</main>
 
 </body>
 </html>
